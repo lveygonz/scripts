@@ -9,7 +9,7 @@ function onOpen() {
   ui.createMenu('📥 Grading') // Nombre del menú
     .addItem('🚀 Envía las calificaciones a las pestañas de los estudiantes', 'mainSendGrades') // Elemento del menú
     .addItem('🧼 Elimina las calificaciones de una actividad', 'clearActivityGrades') // Elemento del menú
-    .addItem('🚚 Recoge las calificaciones globales en la hoja de grupo', 'fetchGrades') // Elemento del menú
+    .addItem('🚚 Recoge las calificaciones globales en la pestaña de grupo', 'fetchGrades') // Elemento del menú
     .addToUi();
 }
 
