@@ -5,6 +5,7 @@ function onOpen() {
     .addItem('☕ Crea las pestañas para cada estudiante', 'createStudentTabs') // Elemento del menú
     .addItem('🔄 Actualiza los cambios en las pestañas de los estudiantes', 'updateStudentTabs') // Elemento del menú
     .addItem('➕ Crea una nueva actividad', 'createActivitySheet') // Elemento del menú
+    .addItem('🔒 Cerrar evaluación', 'closeEvaluation') // Elemento del menú
     .addToUi();
   ui.createMenu('📥 Grading') // Nombre del menú
     .addItem('🚀 Envía las calificaciones a las pestañas de los estudiantes', 'mainSendGrades') // Elemento del menú
@@ -114,6 +115,42 @@ function createActivitySheet() {
   ss.setActiveSheet(newSheet);
   Logger.log(`✅ Pestaña duplicada: ${newSheetName} con ${numCriteriaExtra} columnas adicionales.`);
 }
+
+function closeEvaluation() {
+  const ss = SpreadsheetApp.getActive();
+  const groupSheet = ss.getSheetByName('GROUP');
+
+  if (!groupSheet) {
+    SpreadsheetApp.getUi().alert("❌ No se encontró la pestaña 'GROUP'.");
+    return;
+  }
+
+  const ui = SpreadsheetApp.getUi();
+  const response = ui.prompt(
+    'Nombre de la hoja',
+    'Introduce el nombre para la copia de la evaluación:',
+    ui.ButtonSet.OK_CANCEL
+  );
+  if (response.getSelectedButton() !== ui.Button.OK) {
+    Logger.log('⏹️ Acción cancelada por el usuario.');
+    return;
+  }
+
+  const newSheetName = response.getResponseText().trim();
+  if (!newSheetName) {
+    ui.alert('⚠️ No se ingresó un nombre válido.');
+    return;
+  }
+  if (ss.getSheetByName(newSheetName)) {
+    ui.alert(`❌ Ya existe una pestaña con el nombre \"${newSheetName}\".`);
+    return;
+  }
+
+  const newSheet = groupSheet.copyTo(ss).setName(newSheetName);
+  ss.setActiveSheet(newSheet);
+  Logger.log(`✅ Evaluación cerrada: ${newSheetName}`);
+}
+
 
 
 function createStudentTabs() {
